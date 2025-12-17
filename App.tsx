@@ -97,16 +97,30 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* Top Banner */}
+      <div className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center py-2 px-4 text-xs sm:text-sm">
+        <span className="font-medium">자영업자를 로봇 경영자로! 무료 자동화 솔루션, 해외직구 상담</span>
+        <span className="mx-2">·</span>
+        <a
+          href="https://www.freekitlab.com"
+          target="_blank"
+          rel="noreferrer"
+          className="underline hover:text-purple-200 transition-colors"
+        >
+          www.freekitlab.com
+        </a>
+      </div>
+
       {/* Header */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2 text-orange-600">
             <div className="bg-orange-100 p-2 rounded-lg">
-              <ChefHat className="w-6 h-6" />
+              <ChefHat className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <span className="text-xl font-extrabold tracking-tight">사장님로고 AI</span>
+            <span className="text-lg sm:text-xl font-extrabold tracking-tight">사장님로고 AI</span>
           </div>
-          <nav className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
+          <nav className="flex gap-4 text-sm font-medium text-slate-600">
             <a
               href="https://www.freekitlab.com"
               target="_blank"
