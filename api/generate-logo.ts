@@ -67,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         - Spelling must be EXACTLY: "${data.businessName}"
         - Text should be clean, legible, and well-integrated with the symbol
         - Use a modern, friendly font style
+        - Text MUST contain only the business name (no category, no extra words)
 
         STYLE: ${variation.style}
         - Colors: ${variation.colors}
@@ -80,10 +81,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         4. **Complexity**: Simple and memorable - easy to recognize
         5. **Background**: Solid pastel or soft cream/white background
         6. **NO**: Heavy gradients, 3D effects, shadows, complex details, photorealistic elements
+        7. Symbol can reflect category/theme: ${data.cuisine}, but do NOT write category text
 
         BUSINESS CONTEXT:
         - Business Name: ${data.businessName}
-        - Category: ${data.cuisine}
+        - Category (for symbol inspiration only, not for text): ${data.cuisine}
         - Special Request: ${data.additionalDetails || 'None'}
 
         Create a logo with both a symbol AND the text "${data.businessName}".
