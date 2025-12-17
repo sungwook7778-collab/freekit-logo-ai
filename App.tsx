@@ -131,6 +131,9 @@ function App() {
                 복잡한 설정 없이 가게 이름만 입력하세요.<br/>
                 디자이너가 작업한 듯한 고퀄리티 로고를 만들어드립니다.
               </p>
+              <p className="text-xs text-slate-400">
+                freekitlab · www.freekitlab.com
+              </p>
             </div>
           )}
 
@@ -225,8 +228,8 @@ function App() {
                 </div>
               </div>
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-slate-800">AI 디자이너가 작업 중입니다</h3>
-                <p className="text-slate-500">가게 이름의 철자를 확인하고 심플한 심볼을 그리는 중...</p>
+                <h3 className="text-2xl font-bold text-slate-800">freekitlab이 로고를 생성 중입니다</h3>
+                <p className="text-slate-500">상호명과 요청사항을 반영한 심볼을 정교하게 그리는 중...</p>
               </div>
               
               <div className="w-64 bg-slate-200 rounded-full h-2.5 overflow-hidden">
