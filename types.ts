@@ -14,6 +14,7 @@ export interface LogoFormData {
   businessName: string;
   cuisine: CuisineType;
   additionalDetails: string;
+  referenceImage?: string | null; // data URL (base64) for optional reference image
 }
 
 export interface GeneratedLogo {

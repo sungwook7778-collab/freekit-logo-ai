@@ -93,6 +93,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       `;
 
       try {
+        // 텍스트 + (선택) 이미지 파트 구성
+        const parts: Array<{ text?: string; inlineData?: { data: string; mimeType: string } }> = [
+          { text: prompt },
+        ];
+
+        if (data.referenceImage) {
+          const match = data.referenceImage.match(/^data:(.*);base64,(.*)$/);
+          if (match) {
+            const mimeType = match[1];
+            const base64Data = match[2];
+            parts.push({
+              inlineData: {
+                data: base64Data,
+                mimeType,
+              },
+            });
+          }
+        }
+
         const response = await fetch(
           `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
           {
@@ -103,7 +122,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             body: JSON.stringify({
               contents: [
                 {
-                  parts: [{ text: prompt }],
+                  parts,
                 },
               ],
               generationConfig: {

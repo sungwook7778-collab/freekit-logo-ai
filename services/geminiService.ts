@@ -11,6 +11,7 @@ export const generateLogoImages = async (data: LogoFormData): Promise<string[]> 
         businessName: data.businessName,
         cuisine: data.cuisine,
         additionalDetails: data.additionalDetails,
+        referenceImage: data.referenceImage,
       }),
     });
 

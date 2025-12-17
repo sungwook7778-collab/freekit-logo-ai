@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ChefHat, Sparkles, Wand2, ArrowRight } from 'lucide-react';
 import { CuisineType, LogoFormData } from './types';
 import { generateLogoImages } from './services/geminiService';
@@ -12,10 +12,12 @@ function App() {
   const [formData, setFormData] = useState<LogoFormData>({
     businessName: '',
     cuisine: CuisineType.KOREAN,
-    additionalDetails: ''
+    additionalDetails: '',
+    referenceImage: null
   });
   const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -46,6 +48,51 @@ function App() {
     setStep('form');
     setGeneratedImages([]);
     setError(null);
+    setFormData({
+      businessName: '',
+      cuisine: CuisineType.KOREAN,
+      additionalDetails: '',
+      referenceImage: null,
+    });
+  };
+
+  const handleFileChange = async (file: File | null) => {
+    if (!file) return;
+    const maxSizeMB = 3;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      alert(`이미지 크기가 너무 큽니다. ${maxSizeMB}MB 이하로 업로드해주세요.`);
+      return;
+    }
+    const dataUrl = await fileToDataUrl(file);
+    setFormData(prev => ({ ...prev, referenceImage: dataUrl }));
+  };
+
+  const fileToDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handlePasteImage = async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          await handleFileChange(file);
+          e.preventDefault();
+          break;
+        }
+      }
+    }
+  };
+
+  const removeReferenceImage = () => {
+    setFormData(prev => ({ ...prev, referenceImage: null }));
   };
 
   return (
@@ -122,9 +169,45 @@ function App() {
                         name="additionalDetails"
                         value={formData.additionalDetails}
                         onChange={handleInputChange}
+                        onPaste={handlePasteImage}
                         placeholder="예: 젓가락과 국수 그릇을 심플하게 표현해주세요. / 커피잔 위에 따뜻한 김이 나는 모습을 원해요."
                         className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none resize-none h-24"
                      />
+                     <div className="mt-3 flex flex-col gap-2">
+                       <div className="flex items-center gap-2">
+                         <Button
+                           type="button"
+                           variant="outline"
+                           className="gap-2"
+                           onClick={() => fileInputRef.current?.click()}
+                         >
+                           이미지 업로드 / 붙여넣기
+                         </Button>
+                         <span className="text-xs text-slate-500">PNG/JPG, 3MB 이하. 붙여넣기도 지원.</span>
+                       </div>
+                       <input
+                         ref={fileInputRef}
+                         type="file"
+                         accept="image/*"
+                         className="hidden"
+                         onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+                       />
+                       {formData.referenceImage && (
+                         <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-slate-50">
+                           <img
+                             src={formData.referenceImage}
+                             alt="참고 이미지 미리보기"
+                             className="w-16 h-16 object-contain rounded border border-slate-200 bg-white"
+                           />
+                           <div className="flex-1 text-sm text-slate-600">
+                             참고 이미지가 첨부되었습니다. (생성 시 심볼 영감에 활용)
+                           </div>
+                           <Button variant="outline" type="button" onClick={removeReferenceImage}>
+                             제거
+                           </Button>
+                         </div>
+                       )}
+                     </div>
                   </div>
                 </div>
 
