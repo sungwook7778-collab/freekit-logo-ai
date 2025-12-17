@@ -161,16 +161,18 @@ function App() {
                   </div>
 
                   <div>
-                     <label className="text-sm font-semibold text-slate-700 mb-1.5 block">추가 요청사항 (선택)</label>
+                     <div className="flex items-center justify-between mb-1.5">
+                       <label className="text-sm font-semibold text-slate-700">추가 요청사항 (선택)</label>
+                       <span className="text-[11px] text-slate-500">이미지 붙여넣기 또는 드래그앤드롭으로 첨부 가능</span>
+                     </div>
                      <textarea 
                         name="additionalDetails"
                         value={formData.additionalDetails}
                         onChange={handleInputChange}
                         onPaste={handlePasteImage}
-                        onClick={() => fileInputRef.current?.click()}
                         onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer?.files?.[0]; if (file) handleFileChange(file); }}
                         onDragOver={(e) => e.preventDefault()}
-                        placeholder="예: 젓가락과 국수 그릇을 심플하게 표현해주세요. / 커피잔 위에 따뜻한 김이 나는 모습을 원해요. (이미지 붙여넣기·드래그앤드롭·클릭으로 업로드)"
+                        placeholder="예: 젓가락과 국수 그릇을 심플하게 표현해주세요. / 커피잔 위에 따뜻한 김이 나는 모습을 원해요. (이미지 붙여넣기·드래그앤드롭 가능)"
                         className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none resize-none h-32"
                      />
                      <input
