@@ -86,7 +86,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         BUSINESS CONTEXT:
         - Business Name: ${data.businessName}
         - Category (for symbol inspiration only, not for text): ${data.cuisine}
-        - Special Request: ${data.additionalDetails || 'None'}
+        - Special Request (HARD PRIORITY): ${data.additionalDetails || 'None'}
+        - If a reference image is provided, use it as the primary visual inspiration for the symbol. Match its shape/composition/colors where reasonable, but keep the logo clean and minimalist.
+        - Follow the Special Request details ABOVE ALL OTHER style hints when choosing motif, shape, and color accents.
 
         Create a logo with both a symbol AND the text "${data.businessName}".
         The result should look like it was designed by a professional human designer.
