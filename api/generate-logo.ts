@@ -33,27 +33,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
     }
 
-    // 3가지 스타일의 프롬프트 생성
+    // 다양한 스타일 목록 (랜덤 3개 추출)
     const styleVariations = [
-      {
-        style: 'Modern Minimal',
-        colors: 'soft mint green and white',
-        description: 'ultra-clean lines, geometric precision, tech-startup feel'
-      },
-      {
-        style: 'Warm Friendly',
-        colors: 'warm peach, coral, and cream',
-        description: 'rounded shapes, cozy feeling, hand-drawn quality, boutique cafe style'
-      },
-      {
-        style: 'Elegant Classic',
-        colors: 'soft lavender, dusty rose, and ivory',
-        description: 'sophisticated, timeless elegance, premium brand aesthetic'
-      }
+      { style: 'Flat Minimal', colors: 'pastel colors', description: 'flat vector, minimalist, clean lines, pastel palette' },
+      { style: 'Warm Pastel', colors: 'soft pastel palette', description: 'warm friendly, hand-drawn feel' },
+      { style: 'Watercolor', colors: 'soft gradients', description: 'watercolor wash, soft blended tones' },
+      { style: 'Pastel Crayon', colors: 'pastel chalk', description: 'crayon texture, soft edges' },
+      { style: 'Pencil Sketch', colors: 'graphite gray', description: 'pencil sketch, clean line art' },
+      { style: 'Charcoal', colors: 'charcoal gray', description: 'charcoal drawing, textured strokes' },
+      { style: 'Anime', colors: 'vibrant', description: 'anime style, cel shading' },
+      { style: 'Cartoon', colors: 'bold bright', description: 'cartoon, bold outlines' },
+      { style: 'Pixel Art', colors: '8-bit palette', description: 'pixel art' },
+      { style: 'Low Poly', colors: 'pastel poly', description: 'low poly, faceted shapes' },
+      { style: 'Clay Render', colors: 'soft clay', description: 'clay render, smooth soft shadows' },
+      { style: 'Paper Cut', colors: 'paper off-white', description: 'paper cut style, layered paper' },
+      { style: 'Isometric', colors: 'soft tech', description: 'isometric view, geometric blocks' },
+      { style: 'Blueprint', colors: 'blue/white', description: 'blueprint style, technical lines' },
+      { style: 'Cinematic', colors: 'film still tones', description: 'cinematic lighting, film still' },
+      { style: 'Neon Cyberpunk', colors: 'neon magenta/cyan', description: 'neon cyberpunk, vaporwave' },
     ];
 
+    const selectedStyles = [...styleVariations]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 3);
+
     // 3개의 이미지를 병렬로 생성
-    const imagePromises = styleVariations.map(async (variation) => {
+    const imagePromises = selectedStyles.map(async (variation) => {
       const prompt = `
         Design a minimalist logo for a small business.
 
