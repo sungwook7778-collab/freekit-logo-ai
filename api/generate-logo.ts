@@ -34,7 +34,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const prompt = `
-      Design a minimalist symbol/icon logo for a small business.
+      Design a minimalist logo for a small business.
+
+      ⚠️ CRITICAL TEXT REQUIREMENT:
+      - The logo MUST include the business name "${data.businessName}" as readable text
+      - Spelling must be EXACTLY: "${data.businessName}"
+      - Text should be clean, legible, and well-integrated with the symbol
+      - Use a modern, friendly font style (rounded sans-serif recommended)
 
       STYLE REQUIREMENTS:
       - Style: Flat design, geometric, hand-crafted feel (NOT AI-generated looking)
@@ -43,22 +49,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       - Feel: Warm, friendly, approachable, human-made quality
 
       DESIGN SPECIFICATIONS:
-      1. **Type**: Simple SYMBOL/ICON only (minimal or no text)
-      2. **Shape**: Clean geometric shapes, smooth curves, balanced composition
-      3. **Complexity**: Very simple - could be drawn with few strokes
-      4. **Background**: Solid pastel or soft cream/white background
-      5. **NO**: Gradients, 3D effects, shadows, complex details, photorealistic elements
+      1. **Type**: Combination mark - Simple symbol/icon WITH the business name text
+      2. **Layout**: Symbol above or beside the text "${data.businessName}"
+      3. **Shape**: Clean geometric shapes, smooth curves, balanced composition
+      4. **Complexity**: Simple and memorable - easy to recognize
+      5. **Background**: Solid pastel or soft cream/white background
+      6. **NO**: Gradients, 3D effects, heavy shadows, complex details, photorealistic elements
 
       INSPIRATION:
       - Think: Dribbble top logos, Japanese minimal design, Nordic branding
-      - Reference: Simple icons like Apple, Airbnb, but softer and more playful
+      - Reference: Logos like Airbnb, Slack - simple icon with clean text
 
       BUSINESS CONTEXT:
       - Business Name: ${data.businessName}
       - Category: ${data.cuisine}
       - Special Request: ${data.additionalDetails || 'None'}
 
-      Create a symbol that captures the essence of "${data.businessName}" in the "${data.cuisine}" industry.
+      Create a logo with both a symbol AND the text "${data.businessName}" that captures the essence of the "${data.cuisine}" industry.
       The result should look like it was designed by a professional human designer at a boutique agency.
     `;
 
