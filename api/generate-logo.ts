@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 interface LogoFormData {
   businessName: string;
@@ -6,49 +6,32 @@ interface LogoFormData {
   additionalDetails: string;
 }
 
-export const config = {
-  runtime: 'edge',
-};
-
-export default async function handler(request: Request) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS 헤더
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // OPTIONS 요청 처리 (CORS preflight)
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const data: LogoFormData = await request.json();
+    const data: LogoFormData = req.body;
 
     if (!data.businessName) {
-      return new Response(JSON.stringify({ error: '상호명을 입력해주세요.' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return res.status(400).json({ error: '상호명을 입력해주세요.' });
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'API 키가 설정되지 않았습니다.' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
     }
-
-    const ai = new GoogleGenAI({ apiKey });
 
     const prompt = `
       Create a professional logo design for a business.
@@ -74,22 +57,41 @@ export default async function handler(request: Request) {
       The final image should look like a finished vector asset, ready for use.
     `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-preview-05-20',
-      contents: {
-        parts: [{ text: prompt }],
-      },
-      config: {
-        responseModalities: ['image', 'text'],
-      },
-    });
+    // Gemini API 직접 호출
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: prompt }],
+            },
+          ],
+          generationConfig: {
+            responseModalities: ['image', 'text'],
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Gemini API Error:', errorText);
+      return res.status(500).json({ error: '이미지 생성 API 호출 실패' });
+    }
+
+    const result = await response.json();
 
     // Extract the image from the response
     let imageData = '';
     let mimeType = 'image/png';
 
-    if (response.candidates && response.candidates[0]?.content?.parts) {
-      for (const part of response.candidates[0].content.parts) {
+    if (result.candidates && result.candidates[0]?.content?.parts) {
+      for (const part of result.candidates[0].content.parts) {
         if (part.inlineData) {
           imageData = part.inlineData.data || '';
           mimeType = part.inlineData.mimeType || 'image/png';
@@ -99,25 +101,15 @@ export default async function handler(request: Request) {
     }
 
     if (!imageData) {
-      return new Response(JSON.stringify({ error: '이미지를 생성하지 못했습니다. 다시 시도해주세요.' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return res.status(500).json({ error: '이미지를 생성하지 못했습니다. 다시 시도해주세요.' });
     }
 
-    return new Response(JSON.stringify({ 
-      imageUrl: `data:${mimeType};base64,${imageData}` 
-    }), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return res.status(200).json({
+      imageUrl: `data:${mimeType};base64,${imageData}`,
     });
 
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return new Response(JSON.stringify({ error: '로고 생성 중 오류가 발생했습니다.' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error('Gemini API Error:', error);
+    return res.status(500).json({ error: '로고 생성 중 오류가 발생했습니다.' });
   }
 }
-
