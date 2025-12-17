@@ -28,13 +28,13 @@ export const LogoResult: React.FC<LogoResultProps> = ({ imageUrls, onReset }) =>
         {imageUrls.map((url, idx) => (
           <div
             key={idx}
-            className="relative group bg-white p-3 rounded-2xl shadow-xl border border-slate-100 aspect-square flex flex-col items-center justify-center overflow-hidden"
+            className="relative group bg-white p-3 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center justify-center overflow-hidden min-h-[240px]"
           >
             <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-25"></div>
             <img
               src={url}
               alt={`Generated Logo ${idx + 1}`}
-              className="relative z-10 w-full h-full object-contain rounded-xl shadow-sm transition-transform duration-300 group-hover:scale-105"
+              className="relative z-10 w-full h-auto max-h-80 object-contain rounded-xl shadow-sm transition-transform duration-300 group-hover:scale-105"
             />
             <Button onClick={() => handleDownload(url, idx)} className="mt-3 w-full gap-2">
               <Download className="w-5 h-5" />
