@@ -107,9 +107,14 @@ function App() {
             <span className="text-xl font-extrabold tracking-tight">사장님로고 AI</span>
           </div>
           <nav className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
-            <a href="#" className="hover:text-orange-500 transition-colors">서비스 소개</a>
-            <a href="#" className="hover:text-orange-500 transition-colors">갤러리</a>
-            <a href="#" className="hover:text-orange-500 transition-colors">이용문의</a>
+            <a
+              href="https://www.freekitlab.com"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-orange-500 transition-colors"
+            >
+              이용문의
+            </a>
           </nav>
         </div>
       </header>
@@ -130,9 +135,6 @@ function App() {
               <p className="text-lg text-slate-600 max-w-lg mx-auto">
                 복잡한 설정 없이 가게 이름만 입력하세요.<br/>
                 디자이너가 작업한 듯한 고퀄리티 로고를 만들어드립니다.
-              </p>
-              <p className="text-xs text-slate-400">
-                freekitlab · www.freekitlab.com
               </p>
             </div>
           )}
@@ -214,6 +216,9 @@ function App() {
                   <Wand2 className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   로고 무료 생성하기
                 </Button>
+                <p className="text-center text-xs text-slate-400">
+                  freekitlab · www.freekitlab.com
+                </p>
               </form>
             </div>
           )}
