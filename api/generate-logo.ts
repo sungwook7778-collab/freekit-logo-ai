@@ -89,8 +89,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         - Special Request (HARD PRIORITY): ${data.additionalDetails || 'None'}
         - If a reference image is provided, use it as the primary visual inspiration for the symbol. Match its shape/composition/colors where reasonable, but keep the logo clean and minimalist.
         - Follow the Special Request details ABOVE ALL OTHER style hints when choosing motif, shape, and color accents.
-        - Add a very subtle footer text: "freekitlab · www.freekitlab.com" in small, light-gray, unobtrusive placement (e.g., bottom-right). It should not overpower the main logo.
-        - When interpreting any reference image, think of "freekitlab" as the designer generating the logo; analyze the image accordingly and keep the output cohesive.
+        - Do NOT add any footer, watermark, or extra text such as "freekitlab" or URLs. Only the business name text is allowed.
+        - When interpreting any reference image, treat it as guidance for the symbol only; keep the output cohesive and minimal.
 
         Create a logo with both a symbol AND the text "${data.businessName}".
         The result should look like it was designed by a professional human designer.
