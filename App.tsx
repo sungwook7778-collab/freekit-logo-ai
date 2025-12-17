@@ -121,9 +121,6 @@ function App() {
           {/* Hero Section (Only show on form step) */}
           {step === 'form' && (
             <div className="text-center mb-10 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <span className="inline-block px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold tracking-wide mb-2">
-                BETA • 무료 체험
-              </span>
               <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight">
                 우리 가게의 첫인상,<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
@@ -170,44 +167,34 @@ function App() {
                         value={formData.additionalDetails}
                         onChange={handleInputChange}
                         onPaste={handlePasteImage}
-                        placeholder="예: 젓가락과 국수 그릇을 심플하게 표현해주세요. / 커피잔 위에 따뜻한 김이 나는 모습을 원해요."
-                        className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none resize-none h-24"
+                        onClick={() => fileInputRef.current?.click()}
+                        onDrop={(e) => { e.preventDefault(); const file = e.dataTransfer?.files?.[0]; if (file) handleFileChange(file); }}
+                        onDragOver={(e) => e.preventDefault()}
+                        placeholder="예: 젓가락과 국수 그릇을 심플하게 표현해주세요. / 커피잔 위에 따뜻한 김이 나는 모습을 원해요. (이미지 붙여넣기·드래그앤드롭·클릭으로 업로드)"
+                        className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none resize-none h-32"
                      />
-                     <div className="mt-3 flex flex-col gap-2">
-                       <div className="flex items-center gap-2">
-                         <Button
-                           type="button"
-                           variant="outline"
-                           className="gap-2"
-                           onClick={() => fileInputRef.current?.click()}
-                         >
-                           이미지 업로드 / 붙여넣기
-                         </Button>
-                         <span className="text-xs text-slate-500">PNG/JPG, 3MB 이하. 붙여넣기도 지원.</span>
-                       </div>
-                       <input
-                         ref={fileInputRef}
-                         type="file"
-                         accept="image/*"
-                         className="hidden"
-                         onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
-                       />
-                       {formData.referenceImage && (
-                         <div className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-slate-50">
-                           <img
-                             src={formData.referenceImage}
-                             alt="참고 이미지 미리보기"
-                             className="w-16 h-16 object-contain rounded border border-slate-200 bg-white"
-                           />
-                           <div className="flex-1 text-sm text-slate-600">
-                             참고 이미지가 첨부되었습니다. (생성 시 심볼 영감에 활용)
-                           </div>
-                           <Button variant="outline" type="button" onClick={removeReferenceImage}>
-                             제거
-                           </Button>
+                     <input
+                       ref={fileInputRef}
+                       type="file"
+                       accept="image/*"
+                       className="hidden"
+                       onChange={(e) => handleFileChange(e.target.files?.[0] || null)}
+                     />
+                     {formData.referenceImage && (
+                       <div className="flex items-center gap-3 p-3 mt-3 rounded-lg border border-slate-200 bg-slate-50">
+                         <img
+                           src={formData.referenceImage}
+                           alt="참고 이미지 미리보기"
+                           className="w-16 h-16 object-contain rounded border border-slate-200 bg-white"
+                         />
+                         <div className="flex-1 text-sm text-slate-600">
+                           참고 이미지가 첨부되었습니다. (붙여넣기/드래그/클릭으로 교체 가능)
                          </div>
-                       )}
-                     </div>
+                         <Button variant="outline" type="button" onClick={removeReferenceImage}>
+                           제거
+                         </Button>
+                       </div>
+                     )}
                   </div>
                 </div>
 
