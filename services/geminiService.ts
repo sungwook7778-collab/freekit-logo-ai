@@ -1,6 +1,6 @@
 import { LogoFormData } from "../types";
 
-export const generateLogoImage = async (data: LogoFormData): Promise<string> => {
+export const generateLogoImages = async (data: LogoFormData): Promise<string[]> => {
   try {
     const response = await fetch('/api/generate-logo', {
       method: 'POST',
@@ -21,11 +21,11 @@ export const generateLogoImage = async (data: LogoFormData): Promise<string> => 
 
     const result = await response.json();
     
-    if (!result.imageUrl) {
+    if (!Array.isArray(result.images) || result.images.length === 0) {
       throw new Error("이미지를 생성하지 못했습니다. 다시 시도해주세요.");
     }
 
-    return result.imageUrl;
+    return result.images as string[];
   } catch (error) {
     console.error("API Error:", error);
     throw error;

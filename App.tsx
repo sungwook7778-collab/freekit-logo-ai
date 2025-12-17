@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChefHat, Sparkles, Wand2, ArrowRight } from 'lucide-react';
 import { CuisineType, LogoFormData } from './types';
-import { generateLogoImage } from './services/geminiService';
+import { generateLogoImages } from './services/geminiService';
 import { InputField } from './components/InputField';
 import { SelectField } from './components/SelectField';
 import { Button } from './components/Button';
@@ -14,7 +14,7 @@ function App() {
     cuisine: CuisineType.KOREAN,
     additionalDetails: ''
   });
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null);
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -33,8 +33,8 @@ function App() {
     setError(null);
     
     try {
-      const imageUrl = await generateLogoImage(formData);
-      setGeneratedImage(imageUrl);
+      const images = await generateLogoImages(formData);
+      setGeneratedImages(images);
       setStep('result');
     } catch (err) {
       setError("로고 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
@@ -44,7 +44,7 @@ function App() {
 
   const handleReset = () => {
     setStep('form');
-    setGeneratedImage(null);
+    setGeneratedImages([]);
     setError(null);
   };
 
@@ -182,8 +182,8 @@ function App() {
           )}
 
           {/* Result Step */}
-          {step === 'result' && generatedImage && (
-            <LogoResult imageUrl={generatedImage} onReset={handleReset} />
+          {step === 'result' && generatedImages.length > 0 && (
+            <LogoResult imageUrls={generatedImages} onReset={handleReset} />
           )}
 
         </div>
